@@ -1,0 +1,3 @@
+coverage==6.5.0  # https://github.com/nedbat/coveragepy
+django==4.0  # https://www.djangoproject.com/
+psycopg2cffi==2.9.0  # https://pypi.org/project/psycopg2cffi/

@@ -1,0 +1,44 @@
+name: Test
+
+on:
+  - pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python-version }}, Database ${{ matrix.database-type }}
+    runs-on: ubuntu-20.04
+
+    services:
+      database:
+        image: postgres:12.1
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          cache: pip
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/translation_jsonfield/tests/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: python -m pip install -r translation_jsonfield/tests/requirements.txt
+
+      - name: Run coverage
+        run: |
+          coverage run --append manage.py test --settings=translation_jsonfield.tests.test_app.settings
+          coverage xml
