@@ -6,7 +6,6 @@ from django.db.models import JSONField
 from django.utils.translation import gettext_lazy as _
 
 from .utils import get_normalised_language
-from .utils import normalise_language_code
 
 
 class TranslationJSONField(JSONField):
@@ -33,9 +32,6 @@ class TranslationJSONField(JSONField):
             lang = get_normalised_language()
             if lang is None:
                 raise ImproperlyConfigured('Enable translations to use TranslationJSONField.')
-
-            if lang not in json_value:
-                lang = normalise_language_code(settings.LANGUAGE_CODE)
 
             return json_value.get(lang, None)
 

@@ -97,9 +97,9 @@ class TranslationModelTest(TestCase):
 
         with override('se_se'):
             ic = IceCreamFlavour.objects.get(pk=ic.pk)
-            # There are no translations for Swedish, so the default language is used
-            self.assertEqual(ic.flavour, 'vanilla')
-            self.assertEqual(ic.topping, 'strawberry')
+            # There are no translations for Swedish, so it returns None
+            self.assertEqual(ic.flavour, None)
+            self.assertEqual(ic.topping, None)
             self.assertEqual(ic.price, 1.5)
 
     def test_raw_value(self):
